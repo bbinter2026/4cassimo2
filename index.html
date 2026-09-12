@@ -61,7 +61,7 @@
         .items-grid-container {
             display: flex;
             flex-direction: column;
-            min-height: 470px; /* Aumentado a altura para incluir +4 linhas para baixo */
+            min-height: 470px;
             border: 1px solid #000000;
             position: relative;
             background: #ffffff;
@@ -146,14 +146,21 @@
                 size: A4 portrait;
                 margin: 0mm;
             }
+            *, *::before, *::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-sizing: border-box !important;
+            }
             html, body {
                 width: 210mm !important;
                 height: 297mm !important;
+                max-width: 210mm !important;
                 max-height: 297mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden !important;
                 background: #ffffff !important;
+                font-size: 9.5pt !important;
             }
             .no-print {
                 display: none !important;
@@ -163,10 +170,14 @@
                 border: none !important;
                 width: 210mm !important;
                 height: 297mm !important;
+                max-width: 210mm !important;
                 max-height: 297mm !important;
-                margin: 0 !important;
-                padding: 5mm 8mm !important;
+                margin: 0 auto !important;
+                padding: 8mm 10mm 8mm 10mm !important;
                 box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
                 page-break-before: avoid !important;
                 page-break-after: avoid !important;
                 page-break-inside: avoid !important;
@@ -175,12 +186,31 @@
                 break-inside: avoid !important;
                 overflow: hidden !important;
             }
+            #logoContainer {
+                width: 75px !important;
+                height: 75px !important;
+            }
+            .items-grid-container {
+                min-height: 310px !important;
+                max-height: 440px !important;
+                flex-grow: 1 !important;
+                overflow: hidden !important;
+            }
+            .items-grid-header, .items-grid-row, .grid-lines-overlay {
+                min-width: 0 !important;
+                width: 100% !important;
+            }
+            .items-grid-row {
+                min-height: 20px !important;
+            }
+            .erp-table th, .erp-table td {
+                padding: 1px 2px !important;
+            }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center">
 
-    <!-- Non-Printable Top Action Bar -->
     <header class="no-print w-full bg-slate-900 text-white py-2.5 px-3 sm:py-3 sm:px-6 mb-2 sm:mb-4 shadow-lg flex justify-between items-center border-b border-slate-700 flex-wrap gap-2">
         <div class="flex items-center gap-2 sm:gap-3">
             <div class="bg-[#007b85] text-white font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[10px] sm:text-xs tracking-wider">PRIMAVERA BSS</div>
@@ -191,7 +221,6 @@
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs overflow-x-auto max-w-full py-1">
-            <!-- User Status Pill & Admin Access Button -->
             <div id="currentUserPill" class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-full text-[11px]">
                 <i class="fa-solid fa-circle-user text-emerald-400" id="userRoleIcon"></i>
                 <span id="currentUserName" class="font-semibold text-slate-200">Visitante</span>
@@ -222,7 +251,7 @@
                 <i class="fa-solid fa-floppy-disk"></i> Guardar
             </button>
 
-            <button onclick="openHistoryModal()" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1 rounded text-[11px] font-semibold border border-slate-600 flex items-center gap-1 transition relative whitespace-nowrap">
+            <button onclick="openHistoryModal()" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1 rounded text-[11px] font-semibold border border-slate-600 flex items-center gap-1 relative whitespace-nowrap">
                 <i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Histórico
                 <span id="historyBadge" class="bg-purple-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">0/5</span>
             </button>
@@ -233,13 +262,11 @@
         </div>
     </header>
 
-    <!-- Printable A4 Document Sheet -->
     <main id="printArea" class="print-page bg-white w-full max-w-[210mm] min-h-0 sm:min-h-[297mm] p-3 sm:p-8 shadow-2xl text-[10.5px] leading-snug text-black flex flex-col justify-between mb-4 sm:mb-8 relative rounded-lg sm:rounded-none">
         
         <div>
             <!-- LOGO & BRANDING HEADER BLOCK -->
             <div class="flex justify-between items-start mb-2">
-                <!-- Exact Square Logo Box with Image Upload Trigger -->
                 <div id="logoContainer" class="w-24 h-24 sm:w-32 sm:h-32 bg-[#a5c8e7] shrink-0 relative overflow-hidden border border-slate-300 shadow-sm flex items-center justify-center group cursor-pointer" onclick="triggerLogoUpload()" title="Clique para alterar o logótipo">
                     <input type="file" id="logoFileInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
                     
@@ -286,38 +313,35 @@
                 </div>
             </div>
 
-            <!-- TEAL HORIZONTAL DIVIDER LINE -->
             <div class="w-full h-[2.5px] bg-[#007b85] mb-3"></div>
 
             <!-- COMPANY & CUSTOMER INFO BLOCK -->
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-2 mb-2 text-[10.5px]">
-                <!-- Company Contact Info -->
                 <div class="sm:col-span-6 space-y-0.5 leading-snug">
-                    <h1 class="font-bold uppercase text-[10.5px] outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 -mx-1 transition" contenteditable="true" id="companyName" onblur="updateCompanyData('name', this.innerText)" title="Clique para editar nome da empresa">HOTEL BILENE</h1>
+                    <h1 class="font-bold uppercase text-[10.5px] outline-none rounded px-1 -mx-1 transition" contenteditable="false" id="companyName" onblur="updateCompanyData('name', this.innerText)">HOTEL BILENE</h1>
                     
-                    <p contenteditable="true" id="companyAddress" onblur="updateCompanyData('address', this.innerText)" class="outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 -mx-1 transition" title="Clique para editar endereço">Praça Municipal-Praia de Bilene</p>
+                    <p contenteditable="false" id="companyAddress" onblur="updateCompanyData('address', this.innerText)" class="outline-none rounded px-1 -mx-1 transition">Praça Municipal-Praia de Bilene</p>
                     
-                    <p contenteditable="true" id="companyProvince" onblur="updateCompanyData('province', this.innerText)" class="outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 -mx-1 transition" title="Clique para editar província">Provincia de Gaza</p>
+                    <p contenteditable="false" id="companyProvince" onblur="updateCompanyData('province', this.innerText)" class="outline-none rounded px-1 -mx-1 transition">Provincia de Gaza</p>
                     
-                    <div class="flex items-center gap-x-1 outline-none hover:bg-sky-50 focus-within:bg-sky-100 rounded px-1 -mx-1 transition flex-wrap">
+                    <div class="flex items-center gap-x-1 outline-none rounded px-1 -mx-1 transition flex-wrap">
                         <span class="shrink-0">Telef.</span>
-                        <span contenteditable="true" id="companyPhone" onblur="updateCompanyData('phone', this.innerText)" class="outline-none min-w-[70px]">+258 870477000</span>
+                        <span contenteditable="false" id="companyPhone" onblur="updateCompanyData('phone', this.innerText)" class="outline-none min-w-[70px]">+258 870477000</span>
                         <span class="shrink-0 ml-1">Fax.</span>
-                        <span contenteditable="true" id="companyFax" onblur="updateCompanyData('fax', this.innerText)" class="outline-none min-w-[70px]">+258 8415000601</span>
+                        <span contenteditable="false" id="companyFax" onblur="updateCompanyData('fax', this.innerText)" class="outline-none min-w-[70px]">+258 8415000601</span>
                     </div>
 
-                    <div class="flex items-center gap-x-1 outline-none hover:bg-sky-50 focus-within:bg-sky-100 rounded px-1 -mx-1 transition">
+                    <div class="flex items-center gap-x-1 outline-none rounded px-1 -mx-1 transition">
                         <span class="shrink-0">Contribuinte Nº:</span>
-                        <span contenteditable="true" id="companyNuit" onblur="updateCompanyData('nuit', this.innerText)" class="outline-none font-medium">401155465</span>
+                        <span contenteditable="false" id="companyNuit" onblur="updateCompanyData('nuit', this.innerText)" class="outline-none font-medium">401155465</span>
                     </div>
 
-                    <div class="flex items-center gap-x-1 outline-none hover:bg-sky-50 focus-within:bg-sky-100 rounded px-1 -mx-1 transition">
+                    <div class="flex items-center gap-x-1 outline-none rounded px-1 -mx-1 transition">
                         <span class="shrink-0">Email:</span>
-                        <span contenteditable="true" id="companyEmail" onblur="updateCompanyData('email', this.innerText)" class="outline-none">bilene@dinamica.co.mz</span>
+                        <span contenteditable="false" id="companyEmail" onblur="updateCompanyData('email', this.innerText)" class="outline-none">bilene@dinamica.co.mz</span>
                     </div>
                 </div>
 
-                <!-- Customer Details -->
                 <div class="sm:col-span-6 space-y-0.5 sm:pl-12 pt-1 border-t sm:border-t-0 border-slate-200 sm:pt-1">
                     <p class="font-normal">Exmo.(s) Sr.(s)</p>
                     <p class="font-normal outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 -mx-1 transition" contenteditable="true" id="customerName">D. Provincial de Plano e Finanças</p>
@@ -325,7 +349,7 @@
                 </div>
             </div>
 
-            <!-- DOCUMENT TITLE & TOP METADATA TABLE -->
+            <!-- DOCUMENT TITLE & METADATA TABLE -->
             <div class="flex justify-end mb-1 overflow-x-auto">
                 <div class="text-right w-full sm:w-auto">
                     <h2 class="font-bold text-[12px] sm:text-[13.5px] text-[#007b85] mb-1">
@@ -355,7 +379,6 @@
                 </div>
             </div>
 
-            <!-- Original Tag -->
             <div class="text-right text-[9.5px] font-normal mb-0.5 pr-0.5">Original</div>
 
             <!-- Customer Details Table -->
@@ -386,7 +409,6 @@
                 </table>
             </div>
 
-            <!-- MAIN ITEMIZED SERVICES GRID -->
             <div class="items-grid-container mb-1">
                 <div class="items-grid-header">
                     <div class="items-col justify-center">Artigo</div>
@@ -399,7 +421,6 @@
                     <div class="items-col justify-center">Total Líquido</div>
                 </div>
 
-                <!-- Continuous Vertical Column Grid Background Overlay -->
                 <div class="grid-lines-overlay">
                     <div class="grid-line-col"></div>
                     <div class="grid-line-col"></div>
@@ -411,9 +432,8 @@
                     <div class="grid-line-col"></div>
                 </div>
 
-                <!-- Grid Rows Body -->
                 <div class="items-grid-body z-10" id="itemsGridBody">
-                    <!-- Dynamic Items Rendered via JavaScript -->
+                    <!-- Dynamic Items Rendered via JS -->
                 </div>
             </div>
 
@@ -423,13 +443,11 @@
                 <div>/ Primavera BSS - Programa certificado DAFMI - 0141/2019</div>
             </div>
 
-            <!-- TAX BREAKDOWN, BANKING DETAILS & TOTALS GRID -->
+            <!-- TAX BREAKDOWN & TOTALS GRID -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 
-                <!-- Left Side: Tax Incidence Table & Shaded Bank Accounts -->
                 <div class="md:col-span-7 flex flex-col justify-between h-full">
                     
-                    <!-- Tax Label & Table -->
                     <div class="mb-3 overflow-x-auto">
                         <table class="erp-table text-center text-[9.5px] w-full min-w-[300px]">
                             <thead>
@@ -458,15 +476,13 @@
                     <div class="mt-2">
                         <p class="font-bold italic underline text-[11px] mb-2 text-black">Dados Bancários:</p>
                         
-                        <!-- Individual Separated Grey Boxes for Bank Accounts -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[9.5px]" id="banksContainer">
                             <!-- Bank Accounts Dynamically Rendered via JS -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Side: Complete Monetary Totals Box & Signatures -->
-                <div class="md:col-span-5 flex flex-col justify-between min-h-[190px]">
+                <div class="md:col-span-5 flex flex-col justify-between min-h-[210px]">
                     <table class="w-full text-[10px] border-collapse">
                         <tbody>
                             <tr>
@@ -489,7 +505,6 @@
                                 <td class="py-1.5 px-1 text-left font-normal align-middle">IVA</td>
                                 <td class="py-1 px-2 text-right w-36 font-normal border border-black bg-white" id="totalVat">36.275,86</td>
                             </tr>
-                            <!-- Final Total Box -->
                             <tr>
                                 <td class="py-1.5 px-1 text-left align-middle">Total ( <span id="summaryCurrency">MT</span> )</td>
                                 <td class="py-1 px-2 text-right w-36 font-bold text-[11px] border border-black bg-white" id="totalInvoice">263.000,00</td>
@@ -497,9 +512,8 @@
                         </tbody>
                     </table>
 
-                    <!-- FOOTER SIGNATURE AREA (Positioned directly under Totals column) -->
-                    <div class="mt-8 sm:mt-12 pt-2">
-                        <div class="w-full border-b border-black mb-1.5"></div>
+                    <div class="mt-6 sm:mt-8 pt-3">
+                        <div class="w-full border-b border-black mb-2"></div>
                         <p class="font-normal text-center text-[11px] outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 transition" contenteditable="true" id="signatureLabel">Assinaturas</p>
                     </div>
                 </div>
@@ -748,7 +762,6 @@
     </div>
 
     <script>
-        // Default Document State Object
         const defaultData = {
             docNumber: "112/2026",
             docDate: "07/03/2026",
@@ -772,10 +785,8 @@
             financialDisc: "0,00",
             items: [
                 { code: "006", description: "Sala de Conferências", qty: 4, unit: "UN", price: 20000, discount: 0, vatRate: 16 },
-                { code: "008", description: "Lanches", qty: 105, unit: "UN", price: 600, discount: 0, vatRate: 16 },
-                { code: "008", description: "Lanche", qty: 20, unit: "UN", price: 600, discount: 0, vatRate: 16 },
-                { code: "010", description: "Almoço", qty: 70, unit: "UN", price: 1200, discount: 0, vatRate: 16 },
-                { code: "010", description: "Almoço", qty: 20, unit: "UN", price: 1200, discount: 0, vatRate: 16 }
+                { code: "008", description: "Lanches", qty: 125, unit: "UN", price: 600, discount: 0, vatRate: 16 },
+                { code: "010", description: "Almoço", qty: 90, unit: "UN", price: 1200, discount: 0, vatRate: 16 }
             ],
             banks: [
                 {
@@ -796,7 +807,7 @@
         };
 
         let currentData = JSON.parse(JSON.stringify(defaultData));
-        let vatInclusiveMode = true; // Total fixado em 263.000,00 MT (Preços c/ IVA incluído)
+        let vatInclusiveMode = true;
         let defaultLogoHTML = '';
 
         const USERS_STORAGE_KEY = 'primavera_users_list_v1';
@@ -891,6 +902,48 @@
                 authBtn.onclick = openLoginModal;
             }
 
+            toggleEditingCapabilities(!!currentUser);
+        }
+
+        function checkAuthForAction() {
+            if (!currentUser) {
+                showToast("Efetue login para fazer alterações no documento.", true);
+                openLoginModal();
+                return false;
+            }
+            return true;
+        }
+
+        function toggleEditingCapabilities(canEdit) {
+            const editables = document.querySelectorAll('[contenteditable]');
+            editables.forEach(el => {
+                const isCompanyField = el.id.startsWith('company') || el.id === 'companyName';
+                const isAdmin = currentUser && currentUser.role === 'Admin';
+
+                // Se for campo da empresa, só o Admin pode editar. Caso contrário, qualquer utilizador logado.
+                const shouldBeEditable = canEdit && (!isCompanyField || isAdmin);
+
+                el.setAttribute('contenteditable', shouldBeEditable ? 'true' : 'false');
+                if (!shouldBeEditable) {
+                    el.classList.add('opacity-80', 'cursor-not-allowed', 'hover:bg-transparent', 'focus:bg-transparent');
+                    el.classList.remove('hover:bg-sky-50', 'focus:bg-sky-100');
+                } else {
+                    el.classList.remove('opacity-80', 'cursor-not-allowed', 'hover:bg-transparent', 'focus:bg-transparent');
+                    el.classList.add('hover:bg-sky-50', 'focus:bg-sky-100');
+                }
+            });
+
+            const summaryInputs = ['totalDiscounts', 'totalAdvance'];
+            summaryInputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.disabled = !canEdit;
+                    if (!canEdit) el.classList.add('cursor-not-allowed');
+                    else el.classList.remove('cursor-not-allowed');
+                }
+            });
+
+            renderItems();
             renderBanks();
         }
 
@@ -900,6 +953,10 @@
             container.innerHTML = '';
 
             const isAdmin = currentUser && currentUser.role === 'Admin';
+            const canEdit = !!currentUser;
+            // Apenas o Admin pode editar os dados bancários. Utilizador normal fica com campos readonly.
+            const canEditBanks = canEdit && isAdmin;
+            const disabledAttr = canEditBanks ? '' : 'disabled readonly';
 
             currentData.banks.forEach((b, idx) => {
                 const div = document.createElement('div');
@@ -907,17 +964,17 @@
 
                 div.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <p class="w-full">Banco: <input type="text" value="${b.bankName}" onchange="updateBank(${idx}, 'bankName', this.value)" class="input-cell inline-block w-auto font-normal text-black" /></p>
-                        ${isAdmin || currentData.banks.length > 1 ? `
+                        <p class="w-full">Banco: <input type="text" value="${b.bankName}" ${disabledAttr} onchange="updateBank(${idx}, 'bankName', this.value)" class="input-cell inline-block w-auto font-bold text-black ${!canEditBanks ? 'cursor-not-allowed' : ''}" /></p>
+                        ${isAdmin && canEdit ? `
                             <button onclick="removeBank(${idx})" class="no-print opacity-0 group-hover:opacity-100 text-red-600 hover:text-red-800 text-[10px] ml-1 transition" title="Remover Banco">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         ` : ''}
                     </div>
-                    <p>Conta: <input type="text" value="${b.account}" onchange="updateBank(${idx}, 'account', this.value)" class="input-cell inline-block w-auto" /></p>
-                    <p>NIB:${b.nib.startsWith(' ') ? '' : ''}<input type="text" value="${b.nib}" onchange="updateBank(${idx}, 'nib', this.value)" class="input-cell inline-block w-auto" /></p>
-                    <p>Moeda: <input type="text" value="${b.currency}" onchange="updateBank(${idx}, 'currency', this.value)" class="input-cell inline-block w-auto" /></p>
-                    <p>Titular: <input type="text" value="${b.holder}" onchange="updateBank(${idx}, 'holder', this.value)" class="input-cell inline-block w-auto" /></p>
+                    <p>Conta: <input type="text" value="${b.account}" ${disabledAttr} onchange="updateBank(${idx}, 'account', this.value)" class="input-cell inline-block w-auto font-bold text-black ${!canEditBanks ? 'cursor-not-allowed' : ''}" /></p>
+                    <p>NIB: <input type="text" value="${b.nib}" ${disabledAttr} onchange="updateBank(${idx}, 'nib', this.value)" class="input-cell inline-block w-auto font-bold text-black ${!canEditBanks ? 'cursor-not-allowed' : ''}" /></p>
+                    <p>Moeda: <input type="text" value="${b.currency}" ${disabledAttr} onchange="updateBank(${idx}, 'currency', this.value)" class="input-cell inline-block w-auto font-bold text-black ${!canEditBanks ? 'cursor-not-allowed' : ''}" /></p>
+                    <p>Titular: <input type="text" value="${b.holder}" ${disabledAttr} onchange="updateBank(${idx}, 'holder', this.value)" class="input-cell inline-block w-auto font-bold text-black ${!canEditBanks ? 'cursor-not-allowed' : ''}" /></p>
                 `;
 
                 container.appendChild(div);
@@ -936,11 +993,16 @@
         }
 
         function updateCompanyData(field, val) {
+            if (!currentUser || currentUser.role !== 'Admin') return;
             if (!currentData.company) currentData.company = {};
             currentData.company[field] = val.trim();
         }
 
         function addBank() {
+            if (!currentUser || currentUser.role !== 'Admin') {
+                showToast("Apenas o Administrador pode gerir dados bancários.", true);
+                return;
+            }
             currentData.banks.push({
                 bankName: "Novo Banco",
                 account: "000000000",
@@ -953,6 +1015,10 @@
         }
 
         function removeBank(idx) {
+            if (!currentUser || currentUser.role !== 'Admin') {
+                showToast("Apenas o Administrador pode gerir dados bancários.", true);
+                return;
+            }
             if (currentData.banks.length <= 1) {
                 showToast("É necessária pelo menos 1 conta bancária.", true);
                 return;
@@ -963,15 +1029,16 @@
         }
 
         function updateBank(idx, field, val) {
+            if (!currentUser || currentUser.role !== 'Admin') return;
             currentData.banks[idx][field] = val.trim();
         }
 
-        // --- CALENDAR MODAL LOGIC ---
         let calendarTargetId = null;
         let calendarDisplayDate = new Date();
         const monthNamesPT = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
         function openCustomCalendar(targetId, event) {
+            if (!checkAuthForAction()) return;
             if (event) event.stopPropagation();
             calendarTargetId = targetId;
             const targetEl = document.getElementById(targetId);
@@ -1131,7 +1198,6 @@
             }
         }
 
-        // --- CALCULATION & FORMATTING HELPERS ---
         function formatNumber(num) {
             if (isNaN(num)) return "0,00";
             return Number(num).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1150,6 +1216,9 @@
             if (!container) return;
             container.innerHTML = '';
 
+            const canEdit = !!currentUser;
+            const disabledAttr = canEdit ? '' : 'disabled readonly';
+
             currentData.items.forEach((item, index) => {
                 const lineTotal = (item.qty * item.price) * (1 - item.discount / 100);
                 const row = document.createElement('div');
@@ -1157,31 +1226,33 @@
 
                 row.innerHTML = `
                     <div class="items-col justify-center">
-                        <input type="text" value="${item.code}" onchange="updateItem(${index}, 'code', this.value)" class="input-cell text-center" />
+                        <input type="text" value="${item.code}" ${disabledAttr} onchange="updateItem(${index}, 'code', this.value)" class="input-cell text-center ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col">
-                        <input type="text" value="${item.description}" onchange="updateItem(${index}, 'description', this.value)" class="input-cell" />
+                        <input type="text" value="${item.description}" ${disabledAttr} onchange="updateItem(${index}, 'description', this.value)" class="input-cell ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col justify-center">
-                        <input type="number" value="${item.qty}" onchange="updateItem(${index}, 'qty', this.value)" class="input-cell text-center" />
+                        <input type="number" value="${item.qty}" ${disabledAttr} onchange="updateItem(${index}, 'qty', this.value)" class="input-cell text-center ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col justify-center">
-                        <input type="text" value="${item.unit}" onchange="updateItem(${index}, 'unit', this.value)" class="input-cell text-center uppercase" />
+                        <input type="text" value="${item.unit}" ${disabledAttr} onchange="updateItem(${index}, 'unit', this.value)" class="input-cell text-center uppercase ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col justify-end">
-                        <input type="text" value="${formatNumber(item.price)}" onchange="updateItem(${index}, 'price', this.value)" class="input-cell text-right" />
+                        <input type="text" value="${formatNumber(item.price)}" ${disabledAttr} onchange="updateItem(${index}, 'price', this.value)" class="input-cell text-right ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col justify-center">
-                        <input type="number" value="${item.discount}" onchange="updateItem(${index}, 'discount', this.value)" class="input-cell text-center" />
+                        <input type="number" value="${item.discount}" ${disabledAttr} onchange="updateItem(${index}, 'discount', this.value)" class="input-cell text-center ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col justify-center">
-                        <input type="number" value="${item.vatRate}" onchange="updateItem(${index}, 'vatRate', this.value)" class="input-cell text-center" />
+                        <input type="number" value="${item.vatRate}" ${disabledAttr} onchange="updateItem(${index}, 'vatRate', this.value)" class="input-cell text-center ${!canEdit ? 'cursor-not-allowed' : ''}" />
                     </div>
                     <div class="items-col justify-end font-semibold pr-1 relative">
                         <span>${formatNumber(lineTotal)}</span>
+                        ${canEdit ? `
                         <button onclick="deleteInvoiceRow(${index})" class="no-print absolute -right-5 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 text-xs transition" title="Remover linha">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
+                        ` : ''}
                     </div>
                 `;
                 container.appendChild(row);
@@ -1213,12 +1284,10 @@
             let finalTotal = 0;
 
             if (vatInclusiveMode) {
-                // Total da Factura fixado em 263.000,00 MT (Valores c/ IVA)
                 finalTotal = grossTotal - totalDiscounts - totalAdvance;
                 netIncidence = finalTotal / 1.16;
                 effectiveVat = finalTotal - netIncidence;
             } else {
-                // IVA de 16% adicionado sobre a incidência
                 netIncidence = grossTotal - totalDiscounts;
                 effectiveVat = netIncidence * 0.16;
                 finalTotal = netIncidence + effectiveVat - totalAdvance;
@@ -1234,6 +1303,7 @@
         }
 
         function toggleVatMode() {
+            if (!checkAuthForAction()) return;
             vatInclusiveMode = !vatInclusiveMode;
             const btn = document.getElementById('vatModeBtn');
             if (btn) {
@@ -1251,6 +1321,7 @@
         }
 
         function addInvoiceRow() {
+            if (!checkAuthForAction()) return;
             currentData.items.push({
                 code: "001",
                 description: "Novo Item / Serviço",
@@ -1264,23 +1335,8 @@
             showToast("Novo item adicionado à factura!");
         }
 
-        function addMultipleRows(count = 4) {
-            for (let i = 0; i < count; i++) {
-                currentData.items.push({
-                    code: "",
-                    description: "",
-                    qty: 1,
-                    unit: "UN",
-                    price: 0,
-                    discount: 0,
-                    vatRate: 16
-                });
-            }
-            renderItems();
-            showToast(`${count} novas linhas adicionadas à factura!`);
-        }
-
         function deleteInvoiceRow(index) {
+            if (!checkAuthForAction()) return;
             if (currentData.items.length <= 1) {
                 showToast("A factura deve ter pelo menos um item.", true);
                 return;
@@ -1291,6 +1347,7 @@
         }
 
         function updateItem(index, field, value) {
+            if (!currentUser) return;
             if (field === 'qty' || field === 'discount' || field === 'vatRate') {
                 currentData.items[index][field] = parseFloat(value) || 0;
             } else if (field === 'price') {
@@ -1302,11 +1359,13 @@
         }
 
         function triggerLogoUpload() {
+            if (!checkAuthForAction()) return;
             const input = document.getElementById('logoFileInput');
             if (input) input.click();
         }
 
         function handleLogoUpload(event) {
+            if (!checkAuthForAction()) return;
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -1321,56 +1380,6 @@
             }
         }
 
-        function resetToOriginal() {
-            currentData = JSON.parse(JSON.stringify(defaultData));
-            const logoDisplay = document.getElementById('logoDisplay');
-            if (logoDisplay && defaultLogoHTML) {
-                logoDisplay.innerHTML = defaultLogoHTML;
-            }
-
-            if (document.getElementById('docNumber')) document.getElementById('docNumber').innerText = currentData.docNumber;
-            if (document.getElementById('docDate')) document.getElementById('docDate').innerText = currentData.docDate;
-            if (document.getElementById('docDueDate')) document.getElementById('docDueDate').innerText = currentData.docDueDate;
-            if (document.getElementById('docCurrency')) document.getElementById('docCurrency').innerText = currentData.docCurrency;
-            if (document.getElementById('docExchangeRate')) document.getElementById('docExchangeRate').innerText = currentData.docExchangeRate;
-            if (document.getElementById('docRequisicao')) document.getElementById('docRequisicao').innerText = "";
-            if (document.getElementById('customerName')) document.getElementById('customerName').innerText = currentData.customerName;
-            if (document.getElementById('customerAddress')) document.getElementById('customerAddress').innerText = currentData.customerAddress;
-            if (document.getElementById('customerTaxId')) document.getElementById('customerTaxId').innerText = currentData.customerTaxId;
-            if (document.getElementById('customerDisc')) document.getElementById('customerDisc').innerText = currentData.customerDisc;
-            if (document.getElementById('paymentTerms')) document.getElementById('paymentTerms').innerText = currentData.paymentTerms;
-            if (document.getElementById('financialDisc')) document.getElementById('financialDisc').innerText = currentData.financialDisc;
-
-            if (currentData.company) {
-                if (document.getElementById('companyName')) document.getElementById('companyName').innerText = currentData.company.name;
-                if (document.getElementById('companyAddress')) document.getElementById('companyAddress').innerText = currentData.company.address;
-                if (document.getElementById('companyProvince')) document.getElementById('companyProvince').innerText = currentData.company.province;
-                if (document.getElementById('companyPhone')) document.getElementById('companyPhone').innerText = currentData.company.phone;
-                if (document.getElementById('companyFax')) document.getElementById('companyFax').innerText = currentData.company.fax;
-                if (document.getElementById('companyNuit')) document.getElementById('companyNuit').innerText = currentData.company.nuit;
-                if (document.getElementById('companyEmail')) document.getElementById('companyEmail').innerText = currentData.company.email;
-            }
-
-            renderItems();
-            renderBanks();
-            showToast("Dados originais restaurados!");
-        }
-
-        function exportCSV() {
-            let csv = "Artigo,Descricao,Quantidade,Unidade,Preco Unitario,Desc %,IVA %,Total Liquido\n";
-            currentData.items.forEach(i => {
-                csv += `"${i.code}","${i.description}",${i.qty},"${i.unit}",${i.price},${i.discount},${i.vatRate},${i.qty * i.price * (1 - i.discount/100)}\n`;
-            });
-
-            const link = document.createElement("a");
-            link.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-            link.download = `Factura_ProForma_${currentData.docNumber.replace('/', '-')}.csv`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // --- INVOICE HISTORY MANAGER (LIMIT: 5 FILES) ---
         const HISTORY_STORAGE_KEY = 'primavera_invoice_history_v1';
 
         function getInvoiceHistory() {
@@ -1502,6 +1511,7 @@
         }
 
         function saveInvoiceToHistory() {
+            if (!checkAuthForAction()) return;
             const history = getInvoiceHistory();
             if (history.length >= 5) {
                 showToast("Limite de 5 facturas guardadas atingido. Elimine uma para guardar nova.", true);
@@ -1616,7 +1626,6 @@
             }, 3000);
         }
 
-        // --- AUTH & USER MANAGEMENT ---
         function openLoginModal() {
             const modal = document.getElementById('loginModal');
             if (modal) {
@@ -1773,12 +1782,10 @@
                 return;
             }
             
-            if (confirm(`Tem a certeza que deseja eliminar o utilizador "${userToDelete.username}"?`)) {
-                users.splice(index, 1);
-                saveUsersList(users);
-                renderUserMgmtTable();
-                showToast("Utilizador eliminado.");
-            }
+            users.splice(index, 1);
+            saveUsersList(users);
+            renderUserMgmtTable();
+            showToast(`Utilizador "${userToDelete.username}" eliminado com sucesso.`);
         }
 
         const EXPIRATION_DATE = new Date(2027, 2, 11);
