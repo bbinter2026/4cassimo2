@@ -61,7 +61,7 @@
         .items-grid-container {
             display: flex;
             flex-direction: column;
-            min-height: 360px;
+            min-height: 470px; /* Aumentado a altura para incluir +4 linhas para baixo */
             border: 1px solid #000000;
             position: relative;
             background: #ffffff;
@@ -146,21 +146,14 @@
                 size: A4 portrait;
                 margin: 0mm;
             }
-            *, *::before, *::after {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                box-sizing: border-box !important;
-            }
             html, body {
                 width: 210mm !important;
                 height: 297mm !important;
-                max-width: 210mm !important;
                 max-height: 297mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden !important;
                 background: #ffffff !important;
-                font-size: 9.5pt !important;
             }
             .no-print {
                 display: none !important;
@@ -170,14 +163,10 @@
                 border: none !important;
                 width: 210mm !important;
                 height: 297mm !important;
-                max-width: 210mm !important;
                 max-height: 297mm !important;
-                margin: 0 auto !important;
-                padding: 8mm 10mm 8mm 10mm !important;
+                margin: 0 !important;
+                padding: 5mm 8mm !important;
                 box-sizing: border-box !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
                 page-break-before: avoid !important;
                 page-break-after: avoid !important;
                 page-break-inside: avoid !important;
@@ -185,26 +174,6 @@
                 break-after: avoid !important;
                 break-inside: avoid !important;
                 overflow: hidden !important;
-            }
-            #logoContainer {
-                width: 75px !important;
-                height: 75px !important;
-            }
-            .items-grid-container {
-                min-height: 220px !important;
-                max-height: 380px !important;
-                flex-grow: 1 !important;
-                overflow: hidden !important;
-            }
-            .items-grid-header, .items-grid-row, .grid-lines-overlay {
-                min-width: 0 !important;
-                width: 100% !important;
-            }
-            .items-grid-row {
-                min-height: 20px !important;
-            }
-            .erp-table th, .erp-table td {
-                padding: 1px 2px !important;
             }
         }
     </style>
@@ -222,6 +191,7 @@
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs overflow-x-auto max-w-full py-1">
+            <!-- User Status Pill & Admin Access Button -->
             <div id="currentUserPill" class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-full text-[11px]">
                 <i class="fa-solid fa-circle-user text-emerald-400" id="userRoleIcon"></i>
                 <span id="currentUserName" class="font-semibold text-slate-200">Visitante</span>
@@ -252,7 +222,7 @@
                 <i class="fa-solid fa-floppy-disk"></i> Guardar
             </button>
 
-            <button onclick="openHistoryModal()" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1 rounded text-[11px] font-semibold border border-slate-600 flex items-center gap-1 relative whitespace-nowrap">
+            <button onclick="openHistoryModal()" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1 rounded text-[11px] font-semibold border border-slate-600 flex items-center gap-1 transition relative whitespace-nowrap">
                 <i class="fa-solid fa-clock-rotate-left text-purple-400"></i> Histórico
                 <span id="historyBadge" class="bg-purple-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">0/5</span>
             </button>
@@ -269,6 +239,7 @@
         <div>
             <!-- LOGO & BRANDING HEADER BLOCK -->
             <div class="flex justify-between items-start mb-2">
+                <!-- Exact Square Logo Box with Image Upload Trigger -->
                 <div id="logoContainer" class="w-24 h-24 sm:w-32 sm:h-32 bg-[#a5c8e7] shrink-0 relative overflow-hidden border border-slate-300 shadow-sm flex items-center justify-center group cursor-pointer" onclick="triggerLogoUpload()" title="Clique para alterar o logótipo">
                     <input type="file" id="logoFileInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
                     
@@ -320,6 +291,7 @@
 
             <!-- COMPANY & CUSTOMER INFO BLOCK -->
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-2 mb-2 text-[10.5px]">
+                <!-- Company Contact Info -->
                 <div class="sm:col-span-6 space-y-0.5 leading-snug">
                     <h1 class="font-bold uppercase text-[10.5px] outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 -mx-1 transition" contenteditable="true" id="companyName" onblur="updateCompanyData('name', this.innerText)" title="Clique para editar nome da empresa">HOTEL BILENE</h1>
                     
@@ -345,6 +317,7 @@
                     </div>
                 </div>
 
+                <!-- Customer Details -->
                 <div class="sm:col-span-6 space-y-0.5 sm:pl-12 pt-1 border-t sm:border-t-0 border-slate-200 sm:pt-1">
                     <p class="font-normal">Exmo.(s) Sr.(s)</p>
                     <p class="font-normal outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 -mx-1 transition" contenteditable="true" id="customerName">D. Provincial de Plano e Finanças</p>
@@ -382,6 +355,7 @@
                 </div>
             </div>
 
+            <!-- Original Tag -->
             <div class="text-right text-[9.5px] font-normal mb-0.5 pr-0.5">Original</div>
 
             <!-- Customer Details Table -->
@@ -425,6 +399,7 @@
                     <div class="items-col justify-center">Total Líquido</div>
                 </div>
 
+                <!-- Continuous Vertical Column Grid Background Overlay -->
                 <div class="grid-lines-overlay">
                     <div class="grid-line-col"></div>
                     <div class="grid-line-col"></div>
@@ -436,6 +411,7 @@
                     <div class="grid-line-col"></div>
                 </div>
 
+                <!-- Grid Rows Body -->
                 <div class="items-grid-body z-10" id="itemsGridBody">
                     <!-- Dynamic Items Rendered via JavaScript -->
                 </div>
@@ -450,8 +426,10 @@
             <!-- TAX BREAKDOWN, BANKING DETAILS & TOTALS GRID -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                 
+                <!-- Left Side: Tax Incidence Table & Shaded Bank Accounts -->
                 <div class="md:col-span-7 flex flex-col justify-between h-full">
                     
+                    <!-- Tax Label & Table -->
                     <div class="mb-3 overflow-x-auto">
                         <table class="erp-table text-center text-[9.5px] w-full min-w-[300px]">
                             <thead>
@@ -480,13 +458,15 @@
                     <div class="mt-2">
                         <p class="font-bold italic underline text-[11px] mb-2 text-black">Dados Bancários:</p>
                         
+                        <!-- Individual Separated Grey Boxes for Bank Accounts -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[9.5px]" id="banksContainer">
                             <!-- Bank Accounts Dynamically Rendered via JS -->
                         </div>
                     </div>
                 </div>
 
-                <div class="md:col-span-5 flex flex-col justify-between min-h-[210px]">
+                <!-- Right Side: Complete Monetary Totals Box & Signatures -->
+                <div class="md:col-span-5 flex flex-col justify-between min-h-[190px]">
                     <table class="w-full text-[10px] border-collapse">
                         <tbody>
                             <tr>
@@ -509,6 +489,7 @@
                                 <td class="py-1.5 px-1 text-left font-normal align-middle">IVA</td>
                                 <td class="py-1 px-2 text-right w-36 font-normal border border-black bg-white" id="totalVat">36.275,86</td>
                             </tr>
+                            <!-- Final Total Box -->
                             <tr>
                                 <td class="py-1.5 px-1 text-left align-middle">Total ( <span id="summaryCurrency">MT</span> )</td>
                                 <td class="py-1 px-2 text-right w-36 font-bold text-[11px] border border-black bg-white" id="totalInvoice">263.000,00</td>
@@ -516,8 +497,9 @@
                         </tbody>
                     </table>
 
-                    <div class="mt-6 sm:mt-8 pt-3">
-                        <div class="w-full border-b border-black mb-2"></div>
+                    <!-- FOOTER SIGNATURE AREA (Positioned directly under Totals column) -->
+                    <div class="mt-8 sm:mt-12 pt-2">
+                        <div class="w-full border-b border-black mb-1.5"></div>
                         <p class="font-normal text-center text-[11px] outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 transition" contenteditable="true" id="signatureLabel">Assinaturas</p>
                     </div>
                 </div>
@@ -790,8 +772,10 @@
             financialDisc: "0,00",
             items: [
                 { code: "006", description: "Sala de Conferências", qty: 4, unit: "UN", price: 20000, discount: 0, vatRate: 16 },
-                { code: "008", description: "Lanches", qty: 125, unit: "UN", price: 600, discount: 0, vatRate: 16 },
-                { code: "010", description: "Almoço", qty: 90, unit: "UN", price: 1200, discount: 0, vatRate: 16 }
+                { code: "008", description: "Lanches", qty: 105, unit: "UN", price: 600, discount: 0, vatRate: 16 },
+                { code: "008", description: "Lanche", qty: 20, unit: "UN", price: 600, discount: 0, vatRate: 16 },
+                { code: "010", description: "Almoço", qty: 70, unit: "UN", price: 1200, discount: 0, vatRate: 16 },
+                { code: "010", description: "Almoço", qty: 20, unit: "UN", price: 1200, discount: 0, vatRate: 16 }
             ],
             banks: [
                 {
@@ -812,7 +796,7 @@
         };
 
         let currentData = JSON.parse(JSON.stringify(defaultData));
-        let vatInclusiveMode = true;
+        let vatInclusiveMode = true; // Total fixado em 263.000,00 MT (Preços c/ IVA incluído)
         let defaultLogoHTML = '';
 
         const USERS_STORAGE_KEY = 'primavera_users_list_v1';
@@ -923,17 +907,17 @@
 
                 div.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <p class="w-full">Banco: <input type="text" value="${b.bankName}" onchange="updateBank(${idx}, 'bankName', this.value)" class="input-cell inline-block w-auto font-bold text-black" /></p>
+                        <p class="w-full">Banco: <input type="text" value="${b.bankName}" onchange="updateBank(${idx}, 'bankName', this.value)" class="input-cell inline-block w-auto font-normal text-black" /></p>
                         ${isAdmin || currentData.banks.length > 1 ? `
                             <button onclick="removeBank(${idx})" class="no-print opacity-0 group-hover:opacity-100 text-red-600 hover:text-red-800 text-[10px] ml-1 transition" title="Remover Banco">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         ` : ''}
                     </div>
-                    <p>Conta: <input type="text" value="${b.account}" onchange="updateBank(${idx}, 'account', this.value)" class="input-cell inline-block w-auto font-bold text-black" /></p>
-                    <p>NIB: <input type="text" value="${b.nib}" onchange="updateBank(${idx}, 'nib', this.value)" class="input-cell inline-block w-auto font-bold text-black" /></p>
-                    <p>Moeda: <input type="text" value="${b.currency}" onchange="updateBank(${idx}, 'currency', this.value)" class="input-cell inline-block w-auto font-bold text-black" /></p>
-                    <p>Titular: <input type="text" value="${b.holder}" onchange="updateBank(${idx}, 'holder', this.value)" class="input-cell inline-block w-auto font-bold text-black" /></p>
+                    <p>Conta: <input type="text" value="${b.account}" onchange="updateBank(${idx}, 'account', this.value)" class="input-cell inline-block w-auto" /></p>
+                    <p>NIB:${b.nib.startsWith(' ') ? '' : ''}<input type="text" value="${b.nib}" onchange="updateBank(${idx}, 'nib', this.value)" class="input-cell inline-block w-auto" /></p>
+                    <p>Moeda: <input type="text" value="${b.currency}" onchange="updateBank(${idx}, 'currency', this.value)" class="input-cell inline-block w-auto" /></p>
+                    <p>Titular: <input type="text" value="${b.holder}" onchange="updateBank(${idx}, 'holder', this.value)" class="input-cell inline-block w-auto" /></p>
                 `;
 
                 container.appendChild(div);
@@ -1229,10 +1213,12 @@
             let finalTotal = 0;
 
             if (vatInclusiveMode) {
+                // Total da Factura fixado em 263.000,00 MT (Valores c/ IVA)
                 finalTotal = grossTotal - totalDiscounts - totalAdvance;
                 netIncidence = finalTotal / 1.16;
                 effectiveVat = finalTotal - netIncidence;
             } else {
+                // IVA de 16% adicionado sobre a incidência
                 netIncidence = grossTotal - totalDiscounts;
                 effectiveVat = netIncidence * 0.16;
                 finalTotal = netIncidence + effectiveVat - totalAdvance;
@@ -1278,6 +1264,22 @@
             showToast("Novo item adicionado à factura!");
         }
 
+        function addMultipleRows(count = 4) {
+            for (let i = 0; i < count; i++) {
+                currentData.items.push({
+                    code: "",
+                    description: "",
+                    qty: 1,
+                    unit: "UN",
+                    price: 0,
+                    discount: 0,
+                    vatRate: 16
+                });
+            }
+            renderItems();
+            showToast(`${count} novas linhas adicionadas à factura!`);
+        }
+
         function deleteInvoiceRow(index) {
             if (currentData.items.length <= 1) {
                 showToast("A factura deve ter pelo menos um item.", true);
@@ -1317,6 +1319,55 @@
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        function resetToOriginal() {
+            currentData = JSON.parse(JSON.stringify(defaultData));
+            const logoDisplay = document.getElementById('logoDisplay');
+            if (logoDisplay && defaultLogoHTML) {
+                logoDisplay.innerHTML = defaultLogoHTML;
+            }
+
+            if (document.getElementById('docNumber')) document.getElementById('docNumber').innerText = currentData.docNumber;
+            if (document.getElementById('docDate')) document.getElementById('docDate').innerText = currentData.docDate;
+            if (document.getElementById('docDueDate')) document.getElementById('docDueDate').innerText = currentData.docDueDate;
+            if (document.getElementById('docCurrency')) document.getElementById('docCurrency').innerText = currentData.docCurrency;
+            if (document.getElementById('docExchangeRate')) document.getElementById('docExchangeRate').innerText = currentData.docExchangeRate;
+            if (document.getElementById('docRequisicao')) document.getElementById('docRequisicao').innerText = "";
+            if (document.getElementById('customerName')) document.getElementById('customerName').innerText = currentData.customerName;
+            if (document.getElementById('customerAddress')) document.getElementById('customerAddress').innerText = currentData.customerAddress;
+            if (document.getElementById('customerTaxId')) document.getElementById('customerTaxId').innerText = currentData.customerTaxId;
+            if (document.getElementById('customerDisc')) document.getElementById('customerDisc').innerText = currentData.customerDisc;
+            if (document.getElementById('paymentTerms')) document.getElementById('paymentTerms').innerText = currentData.paymentTerms;
+            if (document.getElementById('financialDisc')) document.getElementById('financialDisc').innerText = currentData.financialDisc;
+
+            if (currentData.company) {
+                if (document.getElementById('companyName')) document.getElementById('companyName').innerText = currentData.company.name;
+                if (document.getElementById('companyAddress')) document.getElementById('companyAddress').innerText = currentData.company.address;
+                if (document.getElementById('companyProvince')) document.getElementById('companyProvince').innerText = currentData.company.province;
+                if (document.getElementById('companyPhone')) document.getElementById('companyPhone').innerText = currentData.company.phone;
+                if (document.getElementById('companyFax')) document.getElementById('companyFax').innerText = currentData.company.fax;
+                if (document.getElementById('companyNuit')) document.getElementById('companyNuit').innerText = currentData.company.nuit;
+                if (document.getElementById('companyEmail')) document.getElementById('companyEmail').innerText = currentData.company.email;
+            }
+
+            renderItems();
+            renderBanks();
+            showToast("Dados originais restaurados!");
+        }
+
+        function exportCSV() {
+            let csv = "Artigo,Descricao,Quantidade,Unidade,Preco Unitario,Desc %,IVA %,Total Liquido\n";
+            currentData.items.forEach(i => {
+                csv += `"${i.code}","${i.description}",${i.qty},"${i.unit}",${i.price},${i.discount},${i.vatRate},${i.qty * i.price * (1 - i.discount/100)}\n`;
+            });
+
+            const link = document.createElement("a");
+            link.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+            link.download = `Factura_ProForma_${currentData.docNumber.replace('/', '-')}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // --- INVOICE HISTORY MANAGER (LIMIT: 5 FILES) ---
@@ -1722,10 +1773,12 @@
                 return;
             }
             
-            users.splice(index, 1);
-            saveUsersList(users);
-            renderUserMgmtTable();
-            showToast(`Utilizador "${userToDelete.username}" eliminado com sucesso.`);
+            if (confirm(`Tem a certeza que deseja eliminar o utilizador "${userToDelete.username}"?`)) {
+                users.splice(index, 1);
+                saveUsersList(users);
+                renderUserMgmtTable();
+                showToast("Utilizador eliminado.");
+            }
         }
 
         const EXPIRATION_DATE = new Date(2027, 2, 11);
