@@ -154,6 +154,9 @@
                 padding: 0 !important;
                 overflow: hidden !important;
                 background: #ffffff !important;
+                font-size: 9.5pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .no-print {
                 display: none !important;
@@ -165,8 +168,11 @@
                 height: 297mm !important;
                 max-height: 297mm !important;
                 margin: 0 !important;
-                padding: 5mm 8mm !important;
+                padding: 6mm 10mm 6mm 10mm !important;
                 box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
                 page-break-before: avoid !important;
                 page-break-after: avoid !important;
                 page-break-inside: avoid !important;
@@ -174,6 +180,21 @@
                 break-after: avoid !important;
                 break-inside: avoid !important;
                 overflow: hidden !important;
+            }
+            /* Otimização de proporções na impressão */
+            #logoContainer {
+                width: 80px !important;
+                height: 80px !important;
+            }
+            .items-grid-container {
+                min-height: 320px !important;
+                flex-grow: 1 !important;
+            }
+            .items-grid-row {
+                min-height: 20px !important;
+            }
+            .erp-table th, .erp-table td {
+                padding: 1px 2px !important;
             }
         }
     </style>
@@ -498,7 +519,7 @@
                     </table>
 
                     <!-- FOOTER SIGNATURE AREA (Positioned directly under Totals column) -->
-                    <div class="mt-8 sm:mt-12 pt-2">
+                    <div class="mt-4 sm:mt-6 pt-2">
                         <div class="w-full border-b border-black mb-1.5"></div>
                         <p class="font-normal text-center text-[11px] outline-none hover:bg-sky-50 focus:bg-sky-100 rounded px-1 transition" contenteditable="true" id="signatureLabel">Assinaturas</p>
                     </div>
